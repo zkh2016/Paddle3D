@@ -18,6 +18,7 @@ from paddle import nn
 
 from paddle3d.apis import manager
 from paddle3d.models.layers.layer_libs import _transpose_and_gather_feat
+from paddle3d.ops import loss_ops
 
 
 class FocalLoss(nn.Layer):
@@ -92,14 +93,17 @@ class FastFocalLoss(nn.Layer):
                 dtype=ind.dtype)
             bs_ind.append(bs_idx)
         bs_ind = paddle.concat(bs_ind, axis=0)
-        m_ind = []
-        for i in range(pos_pred_pix.shape[1]):
-            m_idx = paddle.full(
-                shape=[pos_pred_pix.shape[0], 1, 1],
-                fill_value=i,
-                dtype=ind.dtype)
-            m_ind.append(m_idx)
-        m_ind = paddle.concat(m_ind, axis=1)
+        #m_ind = []
+        #for i in range(pos_pred_pix.shape[1]):
+        #    m_idx = paddle.full(
+        #        shape=[pos_pred_pix.shape[0], 1, 1],
+        #        fill_value=i,
+        #        dtype=ind.dtype)
+        #    m_ind.append(m_idx)
+        #m_ind = paddle.concat(m_ind, axis=1)
+        m_ind = loss_ops.loss_init(pos_pred_pix)
+        #import numpy as np
+        #assert np.array_equal(m_ind.numpy(), m_ind2.numpy())
         cat = paddle.concat([bs_ind, m_ind, cat.unsqueeze(2)], axis=-1)
         pos_pred = pos_pred_pix.gather_nd(cat)  # B x M
 

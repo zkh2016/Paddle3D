@@ -25,6 +25,10 @@ from paddle3d.env import TMP_HOME
 from paddle3d.utils.logger import logger
 
 custom_ops = {
+    'loss_ops': {
+        'sources': ['loss_ops/loss_init_op.cc', 'loss_ops/loss_init_op.cu'],
+        'version': '0.1.0',
+    },
     'voxelize': {
         'sources': ['voxel/voxelize_op.cc', 'voxel/voxelize_op.cu'],
         'version': '0.1.0',
